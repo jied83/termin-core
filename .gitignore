@@ -1,0 +1,6 @@
+.gradle/
+build/
+.kotlin/
+# Xcode / Swift Package Manager
+.swiftpm/
+*.xcframework/
