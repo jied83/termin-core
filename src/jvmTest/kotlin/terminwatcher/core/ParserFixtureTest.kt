@@ -2,6 +2,7 @@ package terminwatcher.core
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 import terminwatcher.core.api.FetchedPage
 import terminwatcher.core.api.Status
@@ -68,6 +69,18 @@ class ParserFixtureTest {
         assertEquals("2026-10-01", r.dates.first())
         assertEquals(r.dates.sorted(), r.dates)
         assertTrue(r.days.all { it.date != null }, "every live cell should parse to a date")
+    }
+
+    @Test
+    fun `a real calendar page names the service`() {
+        val r = classify(FetchedPage(fixture("calendar_live.html"), DAY_URL, 200))
+        assertEquals("Wohnsitz - Alleinige Wohnung oder Hauptwohnung anmelden", r.serviceName)
+    }
+
+    @Test
+    fun `pages without a selection card have no service name`() {
+        assertNull(classify(FetchedPage(fixture("taken.html"), TAKEN_URL, 200)).serviceName)
+        assertNull(classify(FetchedPage(fixture("calendar_available.html"), TAG_URL, 200)).serviceName)
     }
 
     @Test

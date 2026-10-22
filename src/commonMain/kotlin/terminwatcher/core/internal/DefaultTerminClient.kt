@@ -43,6 +43,7 @@ internal class DefaultTerminClient(
             detail = result.detail,
             html = page.html,
             finalUrl = page.finalUrl,
+            serviceName = result.serviceName,
         )
     }
 

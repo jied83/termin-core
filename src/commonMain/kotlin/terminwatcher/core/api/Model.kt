@@ -47,6 +47,7 @@ data class PageResult(
     val dates: List<String> = emptyList(),
     val detail: String = "",
     val days: List<BookableDay> = emptyList(),
+    val serviceName: String? = null,
 )
 
 data class CheckResult(
@@ -59,6 +60,7 @@ data class CheckResult(
     val detail: String = "",
     val html: String = "",
     val finalUrl: String = "",
+    val serviceName: String? = null,
 ) {
     val hasAppointments: Boolean get() = status == Status.AVAILABLE
     val hasNewAppointments: Boolean get() = freshDates.isNotEmpty()

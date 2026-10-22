@@ -72,6 +72,14 @@ private fun dateFromTable(cell: Element, label: String): LocalDate? {
     return date(match.groupValues[2].toInt(), month, day)
 }
 
+internal fun serviceName(doc: Document): String? = doc.select("ul.list--tablelist > li")
+    .firstOrNull { it.selectFirst("strong")?.text()?.trim() == "Dienstleistungen" }
+    ?.select("ul li")
+    ?.map { it.text().trim() }
+    ?.filter { it.isNotEmpty() }
+    ?.joinToString(", ")
+    ?.ifEmpty { null }
+
 private fun date(year: Int, month: Int, day: Int): LocalDate? =
     runCatching { LocalDate(year, month, day) }.getOrNull()
 
@@ -89,13 +97,14 @@ internal fun classifyPage(html: String?, finalUrl: String?, httpStatus: Int? = n
         return PageResult(Status.BLOCKED, detail = "blocked marker in page, http=$httpStatus")
     }
 
+    val serviceName = serviceName(doc)
     val days = bookableDays(doc)
     val dates = days.map { it.isoDate ?: it.label }.filter { it.isNotEmpty() }.distinct().sorted()
-    if (dates.isNotEmpty()) return PageResult(Status.AVAILABLE, dates = dates, days = days)
+    if (dates.isNotEmpty()) return PageResult(Status.AVAILABLE, dates = dates, days = days, serviceName = serviceName)
 
-    if ("/termin/taken" in url || NO_APPOINTMENT_MARKERS.any { it in text }) return PageResult(Status.NONE)
+    if ("/termin/taken" in url || NO_APPOINTMENT_MARKERS.any { it in text }) return PageResult(Status.NONE, serviceName = serviceName)
     if (doc.select("td.nichtbuchbar, div.calendar-month-table, table.calendar").isNotEmpty()) {
-        return PageResult(Status.NONE, detail = "calendar without bookable days")
+        return PageResult(Status.NONE, detail = "calendar without bookable days", serviceName = serviceName)
     }
 
     return PageResult(Status.UNKNOWN, detail = "http=$httpStatus url=$finalUrl title='${title.take(80)}'")
