@@ -19,17 +19,44 @@ result.matches       // fresh AND passing the filter
 myStore.save(result.dates)
 ```
 
+### Getting it from JitPack
+
+Releases are built by [JitPack](https://jitpack.io/#jied83/termin-core) from git tags.
+Add the JitPack in `settings.gradle.kts`:
+
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven("https://jitpack.io")
+    }
+}
+```
+
+
 ### Adding it to a JVM project
 
 ```kotlin
 dependencies {
-    implementation("io.github.jied83:termin-core:0.1.0")
+    implementation("com.github.jied83.termin-core:termin-core:0.1.1")
     implementation("io.ktor:ktor-client-okhttp:3.6.0")
 }
 ```
 
 ### Adding it to an Android app
-TBA
+
+```kotlin
+// app/build.gradle.kts
+dependencies {
+    implementation("com.github.jied83.termin-core:termin-core:0.1.1")
+    implementation("io.ktor:ktor-client-okhttp:3.6.0")
+}
+```
+
+```xml
+<!-- AndroidManifest.xml -->
+<uses-permission android:name="android.permission.INTERNET" />
+```
 
 ### Adding it to an iOS project
 TBA
